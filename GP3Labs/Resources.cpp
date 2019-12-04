@@ -20,8 +20,8 @@ void Resources::AddModel(const std::string& directory)
 {
 	if (m_models.find(directory) == m_models.end())
 	{
-		m_models[directory] = new Model(ASSET_PATH + directory);
-		LOG_DEBUG("Model Loaded from " + directory);
+		m_models[directory] = std::make_shared<Model>(ASSET_PATH + directory);
+		LOG_DEBUG("Model Loaded from " + directory, Log::Trace);
 	}
 }
 
@@ -29,22 +29,22 @@ void Resources::AddTexture(const std::string& directory)
 {
 	if (m_textures.find(directory) == m_textures.end())
 	{
-		m_textures[directory] = new Texture(ASSET_PATH + directory);
-		LOG_DEBUG("Texture Loaded from " + directory);
+		m_textures[directory] = std::make_shared<Texture>(ASSET_PATH + directory);
+		LOG_DEBUG("Texture Loaded from " + directory, Log::Trace);
 	}
 }
 
-ShaderProgram* Resources::GetShader(const std::string& name)
+std::shared_ptr<ShaderProgram> Resources::GetShader(const std::string& name)
 {
 	return m_shaderPrograms[name];
 }
 
-Model* Resources::GetModel(const std::string& name)
+std::shared_ptr<Model> Resources::GetModel(const std::string& name)
 {
 	return m_models[name];
 }
 
-Texture* Resources::GetTexture(const std::string& name)
+std::shared_ptr<Texture> Resources::GetTexture(const std::string& name)
 {
 	return m_textures[name];
 }
@@ -52,8 +52,8 @@ Texture* Resources::GetTexture(const std::string& name)
 void Resources::ReleaseResources()
 {
 	//using an iterator pattern to iterate through all elements
-	for (auto iter = m_models.begin(); iter != m_models.end(); iter++)
-		delete iter->second;
+	//for (auto iter = m_models.begin(); iter != m_models.end(); iter++)
+	//	delete iter->second;
 	//TODO: release other resources properly
 }
 

@@ -38,6 +38,12 @@ void Mesh::SetUpAttrib(int index, int count, int type, size_t offset)
 
 void Mesh::Bind()
 {
-	//TODO: don't bind mesh if it has already been bound
-	GL_ATTEMPT(glBindVertexArray(m_vao));
+	if (m_vao == GL_FALSE)
+	{
+		GL_ATTEMPT(glBindVertexArray(m_vao));
+	}
+	else
+	{
+		//LOG_DEBUG("Vertex Array Object is already bound", Log::Warning);
+	}
 }

@@ -11,4 +11,5 @@ struct InputState
 
 	std::array<char, 400> keys;
 	glm::ivec2 mousePos;
+	glm::ivec2 oldMousePos;
 };

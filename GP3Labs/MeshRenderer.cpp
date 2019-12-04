@@ -5,7 +5,7 @@
 #include "Application.h"
 #include "Camera.h"
 
-MeshRenderer::MeshRenderer(/*Mesh* mesh*/Model* model, ShaderProgram* program, Texture* texture)
+MeshRenderer::MeshRenderer(/*Mesh* mesh*/std::shared_ptr<Model> model, std::shared_ptr<ShaderProgram> program, std::shared_ptr<Texture> texture)
 {
 	//m_mesh = mesh;
 	m_model = model;
@@ -30,7 +30,7 @@ void MeshRenderer::OnRender()
 	
 	GLuint loc = glGetUniformLocation(m_program->Get(), "MVP");
 	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(mvp));
-	glm::vec3 oColor = glm::vec3(1.f, 0.f, 0.f);
+	glm::vec3 oColor = glm::vec3(.5f, .5f, .5f);
 	loc = glGetUniformLocation(m_program->Get(), "objectColor");
 	glUniform3f(loc, oColor.x, oColor.y, oColor.z);
 

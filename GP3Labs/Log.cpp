@@ -3,10 +3,22 @@
 
 
 
-void Log::Debug(const std::string& msg, const char* file, int line)
+void Log::Debug(const std::string& msg, const char* file, int line, LogLevel l)
 {
-	std::cout << "LOG DEBUG(" << file << ", " << line << "): " << msg <<
-		std::endl;
+	switch (l)
+	{
+	case Trace: 
+		std::cout << "LOG DEBUG(" << file << ", " << line << "): " << msg << std::endl;
+		break;
+	case Warning:
+		std::cout << "LOG WARNING(" << file << ", " << line << "): " << msg << std::endl;
+		break;
+	case Error:
+		std::cout << "LOG ERROR(" << file << ", " << line << "): " << msg << std::endl;
+		break;
+
+	}
+	
 }
 bool Log::CheckGLError(const char* file, int line)
 {

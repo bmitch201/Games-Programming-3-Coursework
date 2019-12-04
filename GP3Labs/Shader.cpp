@@ -28,7 +28,7 @@ GLuint Shader::LoadShaderFromFile(const std::string& fileName, SHADER_TYPE type)
 
 	if (!file)
 	{
-		LOG_DEBUG("File could not be loaded");
+		LOG_DEBUG("File could not be loaded", Log::Error);
 		return 0;
 	}
 	
@@ -40,14 +40,14 @@ GLuint Shader::LoadShaderFromFile(const std::string& fileName, SHADER_TYPE type)
 		file.seekg(std::ios::beg);
 		if (len == 0)
 		{
-			LOG_DEBUG("File has no contents");
+			LOG_DEBUG("File has no contents", Log::Error);
 			return 0;
 		}
 		fileContents.resize(len);
 		file.read(&fileContents[0], len);
 		file.close();
 		GLuint program = LoadShaderFromMemory(fileContents.c_str(),	type);
-		LOG_DEBUG(fileContents);
+		LOG_DEBUG(fileContents, Log::Trace);
 		return program;
 	}
 	return 0;

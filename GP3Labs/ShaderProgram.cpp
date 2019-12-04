@@ -36,7 +36,6 @@ void ShaderProgram::Link()
 }
 void ShaderProgram::Use()
 {
-	//TODO:: Only bind program if it isn't already bound
 	if (m_programActive == GL_FALSE || m_program != m_programActive)
 	{
 		glUseProgram(m_program);

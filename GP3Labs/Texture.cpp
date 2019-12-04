@@ -40,7 +40,7 @@ GLuint Texture::Load(const std::string& directory)
 	}
 	else
 	{
-		LOG_DEBUG("Failed to load texture");
+		LOG_DEBUG("Failed to load texture", Log::Trace);
 	}
 
 	stbi_image_free(data);

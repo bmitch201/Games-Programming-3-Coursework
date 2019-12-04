@@ -1,6 +1,6 @@
 #pragma once
 #ifdef _DEBUG
-#define LOG_DEBUG(msg) Log::Debug(msg, __FILE__, __LINE__)
+#define LOG_DEBUG(msg, errorLevel) Log::Debug(msg, __FILE__, __LINE__, errorLevel)
 #define GL_ATTEMPT(func) func; \
 if(Log::CheckGLError(__FILE__, __LINE__)) __debugbreak()
 #define CHECK_GL_ERROR() Log::CheckGLError(__FILE__, __LINE__)
@@ -10,19 +10,21 @@ if(Log::CheckGLError(__FILE__, __LINE__)) __debugbreak()
 #define CHECK_GL_ERROR()
 #endif
 
-//TODO: implement different log levels
 class Log
 {
 private:
+
+
+	Log();
+public:
+	
 	enum LogLevel
 	{
 		Trace,
 		Warning,
 		Error
 	};
-
-	Log();
-public:
-	static void Debug(const std::string& msg, const char* file, int line);
+		
+	static void Debug(const std::string& msg, const char* file, int line, LogLevel l);
 	static bool CheckGLError(const char* file, int line);
 };

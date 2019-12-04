@@ -48,3 +48,41 @@ bool Input::GetKey(SDL_Keycode key)
 	}
 	else return false;
 }
+
+bool Input::GetKeyDown(SDL_Keycode key)
+{
+	int index = key;
+
+	if (key >= SDLK_CAPSLOCK)
+	{
+		index = (key - SDLK_SCANCODE_MASK) + 128;
+	}
+
+	if (index < m_state.keys.size())
+	{
+		if (m_old_state.keys[index])
+		{
+			return false;
+		}
+		else return true;
+	}
+}
+
+bool Input::GetKeyUp(SDL_Keycode key)
+{
+	int index = key;
+
+	if (key >= SDLK_CAPSLOCK)
+	{
+		index = (key - SDLK_SCANCODE_MASK) + 128;
+	}
+
+	if (index < m_state.keys.size())
+	{
+		if (m_old_state.keys[index])
+		{
+			return true;
+		}
+		else return false;
+	}
+}

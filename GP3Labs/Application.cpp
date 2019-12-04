@@ -26,7 +26,7 @@ void Application::Init()
 	//performing initialization
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 	{
-		LOG_DEBUG(SDL_GetError());
+		LOG_DEBUG(SDL_GetError(), Log::Error);
 		exit(-1);
 	}
 	//setting openGL version to 4.2
@@ -41,6 +41,7 @@ void Application::Init()
 		SDL_WINDOWPOS_CENTERED, m_windowWidth, m_windowHeight,
 		SDL_WINDOW_OPENGL);
 	SDL_CaptureMouse(SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_TRUE);
 	
 	OpenGlInit();
 	GameInit();
@@ -81,8 +82,10 @@ void Application::GameInit()
 {
 	//Loading all resources
 	Resources::GetInstance()->AddModel("Cube.obj");
+	Resources::GetInstance()->AddModel("Skull.obj");
+	
 	Resources::GetInstance()->AddTexture("Wood.jpg");
-	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
@@ -104,13 +107,13 @@ void Application::GameInit()
 	{
 		Entity* a = new Entity();
 		m_entities.push_back(a);
-		a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Cube.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+		a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
 		a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
 		a->AddComponent<RigidBody>();
 		a->GetComponent<RigidBody>()->Init
 		(
-			//new BoxShape(glm::vec3(1.f, 1.f, 1.f))
-			new CapsuleShape(1.f, 0.25f)
+			new BoxShape(glm::vec3(1.f, 1.f, 1.f))
+			//new CapsuleShape(1.f, 0.25f)
 			//new ConeShape(1.f, 1.f)
 			//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
 			//new SphereShape(1.f)
@@ -141,6 +144,8 @@ void Application::Loop()
 				m_appState = AppState::QUITTING;
 				break;
 			case SDL_KEYDOWN:
+				INPUT->SetKey(event.key.keysym.sym, true);
+				
 				switch (event.key.keysym.sym)
 				{
 
@@ -157,16 +162,23 @@ void Application::Loop()
 					}
 					break;
 				case SDLK_ESCAPE:
-					Quit();
+					m_appState = AppState::QUITTING;
 					break;
 				}
 				break;
 				//record when the user releases a key
+			case SDL_KEYUP:
+				INPUT->SetKey(event.key.keysym.sym, false);
+				break;
 			case SDL_MOUSEMOTION: 
 				INPUT->MoveMouse(glm::ivec2(event.motion.xrel,event.motion.yrel));
+				glm::ivec2 movementPos = INPUT->GetMouseDelta();
+				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
+				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.y, m_entities.at(1)->GetTransform()->GetRight());
 				break;
 			}
 		}
+		Movement();
 		auto currentTicks = std::chrono::high_resolution_clock::now();
 		float deltaTime = (float)std::chrono::duration_cast<std::chrono::microseconds>(currentTicks - prevTicks).count() / 100000;
 		m_worldDeltaTime = deltaTime;
@@ -177,6 +189,36 @@ void Application::Loop()
 		Render();
 
 		SDL_GL_SwapWindow(m_window);
+	}
+}
+
+void Application::Movement()
+{
+	if(INPUT->GetKey(SDLK_w))
+	{ 
+		m_entities.at(1)->GetTransform()->AddPosition(m_entities.at(1)->GetTransform()->GetForward());
+	}
+	else if (INPUT->GetKey(SDLK_s))
+	{
+		m_entities.at(1)->GetTransform()->AddPosition(-m_entities.at(1)->GetTransform()->GetForward());
+	}
+
+	if (INPUT->GetKey(SDLK_a))
+	{
+		m_entities.at(1)->GetTransform()->AddPosition(-m_entities.at(1)->GetTransform()->GetRight());
+	}
+	else if (INPUT->GetKey(SDLK_d))
+	{
+		m_entities.at(1)->GetTransform()->AddPosition(m_entities.at(1)->GetTransform()->GetRight());
+	}
+
+	if (INPUT->GetKey(SDLK_SPACE))
+	{
+		m_entities.at(1)->GetTransform()->AddPosition(glm::vec3(0, 1, 0));
+	}
+	else if (INPUT->GetKey(SDLK_LSHIFT))
+	{
+		m_entities.at(1)->GetTransform()->AddPosition(glm::vec3(0, -1, 0));
 	}
 }
 
