@@ -1,0 +1,16 @@
+$(SolutionDir)bin\$(Platform)\$(Configuration)\
+$(SolutionDir)intermediates\$(Platform)\$(Configuration)\
+$(ProjectName)_$(Platform)
+
+$(OutDir)
+
+$(SolutionDir)dependencies\include\;$(IncludePath)
+$(SolutionDir)dependencies\lib\;$(LibraryPath)
+
+glew32.lib
+opengl32.lib
+SDL2.lib
+SDL2main.lib
+
+xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
+xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I
