@@ -25,7 +25,7 @@ void main()
 	float diff = max(dot(normal, lightDir), 0.0);
 	vec3 diffuse = lightColor * diff;
 
-	float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 	vec3 specular = lightColor * spec;
 
 	vec3 colorResult = (ambient + diffuse + specular) * objectColor;

@@ -43,6 +43,7 @@ void Application::Init()
 	SDL_CaptureMouse(SDL_TRUE);
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 	
+
 	OpenGlInit();
 	GameInit();
 }
@@ -85,6 +86,8 @@ void Application::GameInit()
 	Resources::GetInstance()->AddModel("stickman.obj");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
+	Resources::GetInstance()->AddModel("Skull.obj");
+	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
@@ -102,8 +105,7 @@ void Application::GameInit()
 	a->AddComponent(cc);
 	cc->Start();
 	
-	Resources::GetInstance()->AddModel("Skull.obj");
-	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
+
 	
 	for (int i = 0; i < 100; i++)
 	{
