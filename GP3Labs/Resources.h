@@ -16,6 +16,7 @@ private:
 
 public:
 	static Resources* GetInstance();
+	
 	//Adds shader to the map, should be done at the start of the application
 	void AddShader(std::shared_ptr<ShaderProgram> shader, std::string name) { m_shaderPrograms[name] = shader; };
 

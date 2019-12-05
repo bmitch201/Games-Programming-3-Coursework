@@ -3,6 +3,7 @@
 
 Resources::Resources()
 {
+	
 }
 
 Resources* Resources::m_instance = nullptr;

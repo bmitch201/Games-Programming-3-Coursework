@@ -36,7 +36,7 @@ void MeshRenderer::OnRender()
 	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(mvp));
 	
 	glm::vec3 oColor = glm::vec3(.5f, .5f, .5f);
-	glm::vec3 lightPos = glm::vec3(-10.f, 5.f, 0.f);
+	glm::vec3 lightPos = Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition();//glm::vec3(-10.f, 5.f, 0.f);
 	
 	loc = glGetUniformLocation(m_program->Get(), "objectColor");
 	glUniform3f(loc, oColor.x, oColor.y, oColor.z);

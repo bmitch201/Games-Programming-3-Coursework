@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CameraComp.h"
 #include "Camera.h"
-//#include "Input.h"
+#include "Input.h"
 
 void CameraComp::OnUpdate(float deltaTime)
 {
