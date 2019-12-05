@@ -82,8 +82,7 @@ void Application::GameInit()
 {
 	//Loading all resources
 	Resources::GetInstance()->AddModel("Cube.obj");
-	Resources::GetInstance()->AddModel("Skull.obj");
-	
+	Resources::GetInstance()->AddModel("Stickman.obj");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 
@@ -102,12 +101,22 @@ void Application::GameInit()
 	CameraComp* cc = new CameraComp();
 	a->AddComponent(cc);
 	cc->Start();
-
+	
+	Resources::GetInstance()->AddModel("Skull.obj");
+	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
+	
 	for (int i = 0; i < 100; i++)
 	{
 		Entity* a = new Entity();
 		m_entities.push_back(a);
-		a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+		if (i == 2)
+		{
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Stickman.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+		}
+		else
+		{
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
+		}
 		a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
 		a->AddComponent<RigidBody>();
 		a->GetComponent<RigidBody>()->Init
@@ -173,8 +182,8 @@ void Application::Loop()
 			case SDL_MOUSEMOTION: 
 				INPUT->MoveMouse(glm::ivec2(event.motion.xrel,event.motion.yrel));
 				glm::ivec2 movementPos = INPUT->GetMouseDelta();
-				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
-				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.y, m_entities.at(1)->GetTransform()->GetRight());
+				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.x, -glm::vec3(0,1,0));
+				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.y, -m_entities.at(1)->GetTransform()->GetRight());
 				break;
 			}
 		}
