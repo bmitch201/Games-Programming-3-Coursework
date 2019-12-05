@@ -34,7 +34,7 @@ private:
 	void Loop();
 	void Quit();
 	void Update(float deltaTime);
-	void Render();	void GameInit();	void Movement();
+	void Render();	void GameInit();	void Movement();	void ShaderUpdate();
 
 public:
 	//public functions

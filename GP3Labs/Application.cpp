@@ -82,7 +82,7 @@ void Application::GameInit()
 {
 	//Loading all resources
 	Resources::GetInstance()->AddModel("Cube.obj");
-	Resources::GetInstance()->AddModel("Stickman.obj");
+	Resources::GetInstance()->AddModel("stickman.obj");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 
@@ -111,7 +111,7 @@ void Application::GameInit()
 		m_entities.push_back(a);
 		if (i == 2)
 		{
-			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Stickman.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("stickman.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
 		}
 		else
 		{
@@ -130,8 +130,6 @@ void Application::GameInit()
 		);
 		a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 	}
-
-
 }
 
 void Application::Loop()
@@ -202,7 +200,7 @@ void Application::Loop()
 }
 
 void Application::Movement()
-{
+{	
 	if(INPUT->GetKey(SDLK_w))
 	{ 
 		m_entities.at(1)->GetTransform()->AddPosition(m_entities.at(1)->GetTransform()->GetForward());
@@ -229,6 +227,11 @@ void Application::Movement()
 	{
 		m_entities.at(1)->GetTransform()->AddPosition(glm::vec3(0, -1, 0));
 	}
+}
+
+void Application::ShaderUpdate()
+{
+	
 }
 
 void Application::Quit()
