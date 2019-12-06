@@ -105,8 +105,6 @@ void Application::GameInit()
 	a->AddComponent(cc);
 	cc->Start();
 	
-
-	
 	for (int i = 0; i < 100; i++)
 	{
 		Entity* a = new Entity();
