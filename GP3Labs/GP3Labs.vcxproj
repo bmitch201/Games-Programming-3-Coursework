@@ -226,6 +226,8 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\assets\blinn-phong_Frag.glsl" />
+    <None Include="..\assets\blinn-phong_Vert.glsl" />
     <None Include="..\assets\simple_Frag.glsl" />
     <None Include="..\assets\simple_Vert.glsl" />
   </ItemGroup>

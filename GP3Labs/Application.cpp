@@ -83,10 +83,13 @@ void Application::GameInit()
 {
 	//Loading all resources
 	Resources::GetInstance()->AddModel("Cube.obj");
-	Resources::GetInstance()->AddModel("stickman.obj");
-	Resources::GetInstance()->AddTexture("Wood.jpg");
-	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
+	Resources::GetInstance()->AddModel("stickman.obj");	
 	Resources::GetInstance()->AddModel("Skull.obj");
+	Resources::GetInstance()->AddModel("TIE-fighter.obj");
+	Resources::GetInstance()->AddModel("Star Wars CORVETTE.obj");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "blinn-phong_Vert.glsl", ASSET_PATH + "blinn-phong_Frag.glsl"), "blinn-phong");
+	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
 
 	Entity* a = new Entity();
@@ -109,26 +112,40 @@ void Application::GameInit()
 	{
 		Entity* a = new Entity();
 		m_entities.push_back(a);
-		if (i == 2)
+		if (i == 0)
 		{
-			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("stickman.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Star Wars CORVETTE.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
+			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+			a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
+			a->AddComponent<RigidBody>();
+			a->GetComponent<RigidBody>()->Init
+			(
+				new BoxShape(glm::vec3(1.f, 2.5f, 1.f))
+				//new CapsuleShape(1.f, 0.25f)
+				//new ConeShape(1.f, 1.f)
+				//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
+				//new SphereShape(1.f)
+
+			);
 		}
 		else
 		{
-			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
-		}
-		a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
-		a->AddComponent<RigidBody>();
-		a->GetComponent<RigidBody>()->Init
-		(
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
+			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));		
+			a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
+			a->AddComponent<RigidBody>();
+			a->GetComponent<RigidBody>()->Init
+			(
 			new BoxShape(glm::vec3(1.f, 1.f, 1.f))
 			//new CapsuleShape(1.f, 0.25f)
 			//new ConeShape(1.f, 1.f)
 			//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
 			//new SphereShape(1.f)
-			
-		);
-		a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+			);
+		}
+
+
+		
 	}
 }
 

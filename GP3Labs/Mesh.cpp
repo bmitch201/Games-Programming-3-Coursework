@@ -47,8 +47,4 @@ void Mesh::Bind()
 		GL_ATTEMPT(glBindVertexArray(m_vao));
 		m_vao_id = m_vao;
 	}
-	else
-	{
-		//LOG_DEBUG("Vertex Array Object is already bound", Log::Warning);
-	}
 }
