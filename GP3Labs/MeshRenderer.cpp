@@ -23,27 +23,31 @@ void MeshRenderer::OnRender()
 	m_program->Use();
 	//set uniforms here!
 	glm::mat4 model = m_entity->GetTransform()->GetTransformationMatrix();
-	glm::mat4 view = glm::lookAt(glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 1.f) - glm::vec3(0.f, 0.f, 0.f), glm::vec3(0.f, 1.f, 0.f));
-	glm::mat4 mvp = Application::GetInstance()->GetCamera()->Get() * model;
+	glm::mat4 view = Application::GetInstance()->GetCamera()->GetView();
+	glm::mat4 projection = Application::GetInstance()->GetCamera()->GetProj();
+
+	glm::vec3 viewPos = Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition();
 	
 	GLuint loc = glGetUniformLocation(m_program->Get(), "model");
 	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(model));
 	loc = glGetUniformLocation(m_program->Get(), "view");
 	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(view));
-	loc = glGetUniformLocation(m_program->Get(), "MVP");
-	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(mvp));
-	
-	glm::vec3 oColor = glm::vec3(.5f, .5f, .5f);
-	glm::vec3 lightDir = glm::normalize(Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition() - (Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition() + glm::vec3(5.f, 5.f, 0.f)));
+	loc = glGetUniformLocation(m_program->Get(), "projection");
+	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(projection));
 
-	loc = glGetUniformLocation(m_program->Get(), "objectColor");
-	glUniform3f(loc, oColor.x, oColor.y, oColor.z);
+	loc = glGetUniformLocation(m_program->Get(), "viewPos");
+	glUniform3f(loc, viewPos.x, viewPos.y, viewPos.z);
+
+	glm::vec4 lightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
+	
+	glm::vec3 lightDir = glm::vec3(0.f, 5.f, 1.f);
+	
+	loc = glGetUniformLocation(m_program->Get(), "lightColor");
+	glUniform4f(loc, lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	loc = glGetUniformLocation(m_program->Get(), "lightDir");
 	glUniform3f(loc, lightDir.x, lightDir.y, lightDir.z);
 
 	m_texture->Bind();
-	//m_mesh->Bind();	
-	//GL_ATTEMPT(glDrawElements(GL_TRIANGLES, m_mesh->GetIndiciesCount(), GL_UNSIGNED_INT, 0));
 	for (Mesh* mesh : m_model->GetMeshes())
 	{
 		mesh->Bind();

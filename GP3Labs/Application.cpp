@@ -71,8 +71,8 @@ void Application::OpenGlInit()
 	//set less or equal func for depth testing
 	GL_ATTEMPT(glDepthFunc(GL_LEQUAL));
 	//enabling blending
-	glEnable(GL_BLEND);
-	GL_ATTEMPT(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	//glEnable(GL_BLEND);
+	//GL_ATTEMPT(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	//turn on back face culling
 	//GL_ATTEMPT(glEnable(GL_CULL_FACE));
 	
@@ -82,23 +82,23 @@ void Application::OpenGlInit()
 void Application::GameInit()
 {
 	//Loading all resources
-	Resources::GetInstance()->AddModel("Cube.obj");
-	Resources::GetInstance()->AddModel("stickman.obj");	
+	Resources::GetInstance()->AddModel("Crate1.obj");
+	Resources::GetInstance()->AddModel("Arc170.obj");	
 	Resources::GetInstance()->AddModel("Skull.obj");
-	Resources::GetInstance()->AddModel("TIE-fighter.obj");
-	Resources::GetInstance()->AddModel("Star Wars CORVETTE.obj");
-	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
+	Resources::GetInstance()->AddModel("Golf Ball.obj");
+	//Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "blinn-phong_Vert.glsl", ASSET_PATH + "blinn-phong_Frag.glsl"), "blinn-phong");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
+	Resources::GetInstance()->AddTexture("Rubber.jpg");
 	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer( Resources::GetInstance()->GetModel("Cube.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+	a->AddComponent(new MeshRenderer( Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Wood.jpg")));
 	MeshRenderer* m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -10.f, -20.f));
 	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(100.f, 1.f, 100.f)));
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(1000.f, 1.f, 1000.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	a->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
 
@@ -112,15 +112,15 @@ void Application::GameInit()
 	{
 		Entity* a = new Entity();
 		m_entities.push_back(a);
-		if (i == 0)
+		if (i == 99)
 		{
-			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Star Wars CORVETTE.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Arc170.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Rubber.jpg")));
 			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 			a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
 			(
-				new BoxShape(glm::vec3(1.f, 2.5f, 1.f))
+				new BoxShape(glm::vec3(1.f, 1.f, 1.f))
 				//new CapsuleShape(1.f, 0.25f)
 				//new ConeShape(1.f, 1.f)
 				//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
@@ -131,7 +131,7 @@ void Application::GameInit()
 		else
 		{
 			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
-			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));		
+			a->GetTransform()->SetScale(glm::vec3(100.f, 100.f, 100.f));		
 			a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
@@ -197,7 +197,7 @@ void Application::Loop()
 			case SDL_MOUSEMOTION: 
 				INPUT->MoveMouse(glm::ivec2(event.motion.xrel,event.motion.yrel));
 				glm::ivec2 movementPos = INPUT->GetMouseDelta();
-				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.x, -glm::vec3(0,1,0));
+				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
 				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.y, -m_entities.at(1)->GetTransform()->GetRight());
 				break;
 			}
