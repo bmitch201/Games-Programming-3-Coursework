@@ -83,24 +83,70 @@ void Application::GameInit()
 {
 	//Loading all resources
 	Resources::GetInstance()->AddModel("Crate1.obj");
-	Resources::GetInstance()->AddModel("Arc170.obj");	
 	Resources::GetInstance()->AddModel("Skull.obj");
 	Resources::GetInstance()->AddModel("Golf Ball.obj");
+	Resources::GetInstance()->AddModel("45.obj");
+	Resources::GetInstance()->AddModel("teamugobj.obj");
 	//Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "blinn-phong_Vert.glsl", ASSET_PATH + "blinn-phong_Frag.glsl"), "blinn-phong");
-	Resources::GetInstance()->AddTexture("Wood.jpg");
+	Resources::GetInstance()->AddTexture("crate.jpg");
+	Resources::GetInstance()->AddTexture("metal_scratches.jpg");
+	Resources::GetInstance()->AddTexture("Metal.jpg");
 	Resources::GetInstance()->AddTexture("Rubber.jpg");
 	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer( Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Wood.jpg")));
+	a->AddComponent(new MeshRenderer( Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
 	MeshRenderer* m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -10.f, -20.f));
 	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(1000.f, 1.f, 1000.f)));
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 1.f, 50.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 1.f, 50.f));
+
+	a = new Entity();
+	m_entities.push_back(a);
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	m = a->GetComponent<MeshRenderer>();
+	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, -70.f));
+	a->AddComponent<RigidBody>();
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
+	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+	
+	a = new Entity();
+	m_entities.push_back(a);
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	m = a->GetComponent<MeshRenderer>();
+	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, 30.f));
+	a->AddComponent<RigidBody>();
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
+	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+
+	a = new Entity();
+	m_entities.push_back(a);
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	m = a->GetComponent<MeshRenderer>();
+	a->GetTransform()->SetPosition(glm::vec3(-50.f, -5.f, -20.f));
+	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
+	a->AddComponent<RigidBody>();
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
+	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+
+	a = new Entity();
+	m_entities.push_back(a);
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	m = a->GetComponent<MeshRenderer>();
+	a->GetTransform()->SetPosition(glm::vec3(50.f, -5.f, -20.f));
+	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
+	a->AddComponent<RigidBody>();
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
+	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
+	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -108,41 +154,75 @@ void Application::GameInit()
 	a->AddComponent(cc);
 	cc->Start();
 	
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		Entity* a = new Entity();
 		m_entities.push_back(a);
-		if (i == 99)
+		if (i == 0)
 		{
-			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Arc170.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Rubber.jpg")));
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
 			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
-			a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
+			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
 			(
-				new BoxShape(glm::vec3(1.f, 1.f, 1.f))
+				new BoxShape(glm::vec3(1.f, .05f, 1.f))
+			);
+		}
+		else if (i == 1)
+		{
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Golf Ball.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Rubber.jpg")));
+			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
+			a->AddComponent<RigidBody>();
+			a->GetComponent<RigidBody>()->Init
+			(
+				new SphereShape(2.1f)
+
+			);
+		}
+		else if (i == 2)
+		{
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("45.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("metal_scratches.jpg")));
+			a->GetTransform()->SetScale(glm::vec3(3.f, 3.f, 3.f));
+			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
+			a->AddComponent<RigidBody>();
+			a->GetComponent<RigidBody>()->Init
+			(
+				new CylinderShape(glm::vec3(.6f, 1.25f, .6f))
+			);
+		}
+		else if (i == 3)
+		{
+			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Golf Ball.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Metal.jpg")));
+			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
+			a->AddComponent<RigidBody>();
+			a->GetComponent<RigidBody>()->Init
+			(
+				//new BoxShape(glm::vec3(1.f, .05f, 1.f))
 				//new CapsuleShape(1.f, 0.25f)
 				//new ConeShape(1.f, 1.f)
 				//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
-				//new SphereShape(1.f)
-
+				new SphereShape(2.1f)
 			);
 		}
 		else
 		{
 			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
-			a->GetTransform()->SetScale(glm::vec3(100.f, 100.f, 100.f));		
-			a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
+			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));		
+			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
 			(
-			new BoxShape(glm::vec3(1.f, 1.f, 1.f))
+			new BoxShape(glm::vec3(1.f, .05f, 1.f))
 			//new CapsuleShape(1.f, 0.25f)
 			//new ConeShape(1.f, 1.f)
 			//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
 			//new SphereShape(1.f)
 			);
 		}
+		
 
 
 		
@@ -174,13 +254,13 @@ void Application::Loop()
 				{
 
 				case SDLK_UP:
-					for (int i = 2; i < m_entities.size(); i++)
+					for (int i = 6; i < m_entities.size(); i++)
 					{
 						m_entities.at(i)->GetComponent<RigidBody>()->ApplyForce(btVector3(0,30,0));
 					}
 					break;
 				case SDLK_LEFT:
-					for (int i = 2; i < m_entities.size(); i++)
+					for (int i = 6; i < m_entities.size(); i++)
 					{
 						m_entities.at(i)->GetComponent<RigidBody>()->ApplyTorque(btVector3(0, 30, 0));
 					}
@@ -197,8 +277,8 @@ void Application::Loop()
 			case SDL_MOUSEMOTION: 
 				INPUT->MoveMouse(glm::ivec2(event.motion.xrel,event.motion.yrel));
 				glm::ivec2 movementPos = INPUT->GetMouseDelta();
-				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
-				m_entities.at(1)->GetTransform()->RotateEulerAxis(movementPos.y, -m_entities.at(1)->GetTransform()->GetRight());
+				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
+				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.y, -m_entities.at(5)->GetTransform()->GetRight());
 				break;
 			}
 		}
@@ -220,29 +300,29 @@ void Application::Movement()
 {	
 	if(INPUT->GetKey(SDLK_w))
 	{ 
-		m_entities.at(1)->GetTransform()->AddPosition(m_entities.at(1)->GetTransform()->GetForward());
+		m_entities.at(5)->GetTransform()->AddPosition(m_entities.at(5)->GetTransform()->GetForward());
 	}
 	else if (INPUT->GetKey(SDLK_s))
 	{
-		m_entities.at(1)->GetTransform()->AddPosition(-m_entities.at(1)->GetTransform()->GetForward());
+		m_entities.at(5)->GetTransform()->AddPosition(-m_entities.at(5)->GetTransform()->GetForward());
 	}
 
 	if (INPUT->GetKey(SDLK_a))
 	{
-		m_entities.at(1)->GetTransform()->AddPosition(-m_entities.at(1)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->AddPosition(-m_entities.at(5)->GetTransform()->GetRight());
 	}
 	else if (INPUT->GetKey(SDLK_d))
 	{
-		m_entities.at(1)->GetTransform()->AddPosition(m_entities.at(1)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->AddPosition(m_entities.at(5)->GetTransform()->GetRight());
 	}
 
 	if (INPUT->GetKey(SDLK_SPACE))
 	{
-		m_entities.at(1)->GetTransform()->AddPosition(glm::vec3(0, 1, 0));
+		m_entities.at(5)->GetTransform()->AddPosition(glm::vec3(0, 1, 0));
 	}
 	else if (INPUT->GetKey(SDLK_LSHIFT))
 	{
-		m_entities.at(1)->GetTransform()->AddPosition(glm::vec3(0, -1, 0));
+		m_entities.at(5)->GetTransform()->AddPosition(glm::vec3(0, -1, 0));
 	}
 }
 

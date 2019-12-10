@@ -38,9 +38,9 @@ void MeshRenderer::OnRender()
 	loc = glGetUniformLocation(m_program->Get(), "viewPos");
 	glUniform3f(loc, viewPos.x, viewPos.y, viewPos.z);
 
-	glm::vec4 lightColor = glm::vec4(1.f, 1.f, 1.f, 1.f);
+	glm::vec4 lightColor = glm::vec4(1.f, 1.f, 1.f, .5f);
 	
-	glm::vec3 lightDir = glm::vec3(0.f, 5.f, 1.f);
+	glm::vec3 lightDir = glm::vec3(-5.f, 6.f, 7.f);
 	
 	loc = glGetUniformLocation(m_program->Get(), "lightColor");
 	glUniform4f(loc, lightColor.x, lightColor.y, lightColor.z, lightColor.w);
