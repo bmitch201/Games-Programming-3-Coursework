@@ -36,15 +36,16 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<int> indices)
 void Mesh::SetUpAttrib(int index, int count, int type, size_t offset)
 {
 	GL_ATTEMPT(glEnableVertexAttribArray(index));
-	GL_ATTEMPT(glVertexAttribPointer(index, count, type, GL_FALSE,
-		sizeof(Vertex), (void**)offset));
+	GL_ATTEMPT(glVertexAttribPointer(index, count, type, GL_FALSE, sizeof(Vertex), (void**)offset));
 }
 
 void Mesh::Bind()
 {
+	glBindVertexArray(m_vao);
+			
 	if (m_vao != m_vao_id)
 	{
-		GL_ATTEMPT(glBindVertexArray(m_vao));
+
 		m_vao_id = m_vao;
 	}
 }

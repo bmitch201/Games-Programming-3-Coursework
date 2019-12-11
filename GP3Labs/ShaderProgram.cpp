@@ -36,9 +36,11 @@ void ShaderProgram::Link()
 }
 void ShaderProgram::Use()
 {
+	glUseProgram(m_program);
+
 	if (m_programActive == GL_FALSE || m_program != m_programActive)
 	{
-		glUseProgram(m_program);
+
 		m_programActive = m_program;
 	}
 }

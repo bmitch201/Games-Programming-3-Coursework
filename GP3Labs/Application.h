@@ -21,11 +21,21 @@ private:
 	//private variables
 	static Application* m_application;
 	SDL_Window* m_window = nullptr;
+	SDL_Renderer* renderer = nullptr;
+	SDL_Surface* fontSurface = nullptr;
+	SDL_Texture* message = nullptr;
+	SDL_Color fontColor;
+	SDL_Rect fontRect;
+	TTF_Font* font = nullptr;
 	SDL_GLContext m_glContext = nullptr;
 	int m_windowWidth = 1280;
 	int m_windowHeight = 720;
 	AppState m_appState = AppState::INITILISING;
 	float m_worldDeltaTime = 0.f;
+
+	//Used to check FPS
+	time_t s_time, c_time;
+	int frames = 0;
 	
 	//private functions
 	Application();
@@ -34,7 +44,7 @@ private:
 	void Loop();
 	void Quit();
 	void Update(float deltaTime);
-	void Render();	void GameInit();	void Movement();	void ShaderUpdate();
+	void Render();	void GameInit();	void Movement();
 
 public:
 	//public functions

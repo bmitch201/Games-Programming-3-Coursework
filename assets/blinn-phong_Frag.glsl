@@ -10,7 +10,7 @@ in vec2 texCoord;
 in vec3 normal;
 in vec3 fragPos;
 
-float ambientStrength = 0.05f;
+float ambientStrength = 0.2f;
 
 void main()
 {
@@ -22,8 +22,8 @@ void main()
 	vec3 viewDir = normalize(viewPos - fragPos);
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	
-	float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-	vec4 specular = lightColor * spec * 0.8;
+	float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+	vec4 specular = lightColor * spec;
 
 	FragColor = texture(thisTexture, texCoord) * (ambient + diffuse + specular);
 } 

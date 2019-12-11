@@ -19,6 +19,7 @@ Application* Application::m_application = nullptr;
 
 Application::Application()
 {
+
 }
 
 void Application::Init()
@@ -37,12 +38,14 @@ void Application::Init()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	//creating window
-	m_window = SDL_CreateWindow("GP3-GAME", SDL_WINDOWPOS_CENTERED,
-		SDL_WINDOWPOS_CENTERED, m_windowWidth, m_windowHeight,
-		SDL_WINDOW_OPENGL);
+	m_window = SDL_CreateWindow("GP3-COURSEWORK", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_windowWidth, m_windowHeight, SDL_WINDOW_OPENGL);
 	SDL_CaptureMouse(SDL_TRUE);
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 	
+	renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
+	TTF_Init();
+	font = TTF_OpenFont("assets/Arial.ttf", 30);
+	fontColor = { 255, 255, 0 };
 
 	OpenGlInit();
 	GameInit();
@@ -50,8 +53,7 @@ void Application::Init()
 
 void Application::OpenGlInit()
 {
-	//creating context (our opengl statemachine in which all our GL calls
-	//will refer to)
+	//creating context (our opengl statemachine in which all our GL calls will refer to)
 	m_glContext = SDL_GL_CreateContext(m_window);
 	// Using m_  to refer it as it being a member 
 	CHECK_GL_ERROR();
@@ -70,11 +72,8 @@ void Application::OpenGlInit()
 	GL_ATTEMPT(glEnable(GL_DEPTH_TEST));
 	//set less or equal func for depth testing
 	GL_ATTEMPT(glDepthFunc(GL_LEQUAL));
-	//enabling blending
-	//glEnable(GL_BLEND);
-	//GL_ATTEMPT(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	//turn on back face culling
-	//GL_ATTEMPT(glEnable(GL_CULL_FACE));
+	GL_ATTEMPT(glEnable(GL_CULL_FACE));
 	
 	glViewport(0, 0, (GLsizei)m_windowWidth, (GLsizei)m_windowHeight);
 }
@@ -82,13 +81,15 @@ void Application::OpenGlInit()
 void Application::GameInit()
 {
 	//Loading all resources
+	//Objects
 	Resources::GetInstance()->AddModel("Crate1.obj");
 	Resources::GetInstance()->AddModel("Skull.obj");
 	Resources::GetInstance()->AddModel("Golf Ball.obj");
 	Resources::GetInstance()->AddModel("45.obj");
-	Resources::GetInstance()->AddModel("teamugobj.obj");
-	//Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
+	//Shaders
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "blinn-phong_Vert.glsl", ASSET_PATH + "blinn-phong_Frag.glsl"), "blinn-phong");
+	//Textures
 	Resources::GetInstance()->AddTexture("crate.jpg");
 	Resources::GetInstance()->AddTexture("metal_scratches.jpg");
 	Resources::GetInstance()->AddTexture("Metal.jpg");
@@ -97,7 +98,7 @@ void Application::GameInit()
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer( Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer( Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
 	MeshRenderer* m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -10.f, -20.f));
 	a->AddComponent<RigidBody>();
@@ -107,7 +108,7 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, -70.f));
 	a->AddComponent<RigidBody>();
@@ -117,7 +118,7 @@ void Application::GameInit()
 	
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, 30.f));
 	a->AddComponent<RigidBody>();
@@ -127,7 +128,7 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(-50.f, -5.f, -20.f));
 	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
@@ -138,7 +139,7 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(50.f, -5.f, -20.f));
 	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
@@ -161,7 +162,7 @@ void Application::GameInit()
 		if (i == 0)
 		{
 			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Skull.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Bone-Texture.jpg")));
-			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+			a->GetTransform()->SetScale(glm::vec3(1.5f, 1.5f, 1.5f));
 			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
@@ -195,7 +196,7 @@ void Application::GameInit()
 		else if (i == 3)
 		{
 			a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Golf Ball.obj"), Resources::GetInstance()->GetShader("blinn-phong"), Resources::GetInstance()->GetTexture("Metal.jpg")));
-			a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+			a->GetTransform()->SetScale(glm::vec3(.8f, .8f, .8f));
 			a->GetTransform()->SetPosition(glm::vec3(5.f * i, 0, -20.f));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
@@ -215,28 +216,30 @@ void Application::GameInit()
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init
 			(
-			new BoxShape(glm::vec3(1.f, .05f, 1.f))
+			new BoxShape(glm::vec3(1.f, .5f, 1.f))
 			//new CapsuleShape(1.f, 0.25f)
 			//new ConeShape(1.f, 1.f)
 			//new CylinderShape(glm::vec3(1.f, 1.f, 1.f))
 			//new SphereShape(1.f)
 			);
-		}
-		
-
-
-		
+		}	
 	}
+
+
+	time(&s_time);
 }
 
 void Application::Loop()
-{
+{	
 	m_appState = AppState::RUNNING;
 	auto prevTicks = std::chrono::high_resolution_clock::now();
 	SDL_Event event;
 	while (m_appState != AppState::QUITTING)
 	{
-		//poll SDL events
+		frames++;
+		time(&c_time);
+		
+		//poll SDL events	
 		while (SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -256,7 +259,13 @@ void Application::Loop()
 				case SDLK_UP:
 					for (int i = 6; i < m_entities.size(); i++)
 					{
-						m_entities.at(i)->GetComponent<RigidBody>()->ApplyForce(btVector3(0,30,0));
+						m_entities.at(i)->GetComponent<RigidBody>()->ApplyForce(btVector3(0,10,0));
+					}
+					break;				
+				case SDLK_DOWN:
+					for (int i = 6; i < m_entities.size(); i++)
+					{
+						m_entities.at(i)->GetComponent<RigidBody>()->ApplyForce(btVector3(0, -10, 0));
 					}
 					break;
 				case SDLK_LEFT:
@@ -265,6 +274,13 @@ void Application::Loop()
 						m_entities.at(i)->GetComponent<RigidBody>()->ApplyTorque(btVector3(0, 30, 0));
 					}
 					break;
+				case SDLK_RIGHT:
+					for (int i = 6; i < m_entities.size(); i++)
+					{
+						m_entities.at(i)->GetComponent<RigidBody>()->ApplyTorque(btVector3(0, -30, 0));
+					}
+					break;
+
 				case SDLK_ESCAPE:
 					m_appState = AppState::QUITTING;
 					break;
@@ -280,6 +296,8 @@ void Application::Loop()
 				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
 				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.y, -m_entities.at(5)->GetTransform()->GetRight());
 				break;
+			case SDL_JOYBUTTONDOWN:
+				INPUT->SetKey(event.jbutton.type, true);
 			}
 		}
 		Movement();
@@ -288,9 +306,42 @@ void Application::Loop()
 		m_worldDeltaTime = deltaTime;
 		prevTicks = currentTicks;
 		Physics::GetInstance()->Update(deltaTime);
+		
+		//Set Uniforms to allow for multiple shaders!
+		Resources::GetInstance()->GetShader("simple")->Use();
+		Resources::GetInstance()->GetShader("simple")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
+		Resources::GetInstance()->GetShader("simple")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
+		Resources::GetInstance()->GetShader("simple")->setVec3("objectColor", glm::vec3(1.f, 1.f, 1.f));
+		
+		Resources::GetInstance()->GetShader("blinn-phong")->Use();
+		Resources::GetInstance()->GetShader("blinn-phong")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
+		Resources::GetInstance()->GetShader("blinn-phong")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
+		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("viewPos", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition());
+		Resources::GetInstance()->GetShader("blinn-phong")->setVec4("lightColor", glm::vec4(1.f, 1.f, 1.f, 0.5f));
+		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));	
 
 		Update(deltaTime);
 		Render();
+
+		if (difftime(c_time, s_time) >= 1.0)
+		{
+			LOG_DEBUG("Frames: " + std::to_string(frames), Log::Trace);
+			fontSurface = TTF_RenderText_Solid(font, "Boom", fontColor);
+			message = SDL_CreateTextureFromSurface(renderer, fontSurface);
+
+			fontRect.x = 100;
+			fontRect.y = 100;
+			fontRect.w = 1000;
+			fontRect.h = 1000;
+
+			SDL_RenderCopy(renderer, message, NULL, &fontRect);
+
+			SDL_FreeSurface(fontSurface);
+			SDL_DestroyTexture(message);
+
+			frames = 0;
+			time(&s_time);
+		}
 
 		SDL_GL_SwapWindow(m_window);
 	}
@@ -324,11 +375,6 @@ void Application::Movement()
 	{
 		m_entities.at(5)->GetTransform()->AddPosition(glm::vec3(0, -1, 0));
 	}
-}
-
-void Application::ShaderUpdate()
-{
-	
 }
 
 void Application::Quit()

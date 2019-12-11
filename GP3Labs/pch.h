@@ -14,6 +14,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
+#include <SDL/SDL_ttf.h>
 
 #include <glm/glm.hpp>
 #include <glm/common.hpp>

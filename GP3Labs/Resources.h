@@ -22,7 +22,8 @@ public:
 
 	//Adds model to the model map
 	void AddModel(const std::string& directory);
-	void AddModel(const std::string& name, std::shared_ptr<Model> m) { m_models[name] = m; }
+	void AddModel(const std::string& name, std::shared_ptr<Model> m) { m_models[name] = m; }
+
 	void AddTexture(const std::string& directory);
 	void AddTexture(const std::string& name, std::shared_ptr<Texture> t) { m_textures[name] = t; };
 	
@@ -30,6 +31,5 @@ public:
 	std::shared_ptr<Model> GetModel(const std::string& name);
 	std::shared_ptr<Texture> GetTexture(const std::string& name);
 	
-	//Deletes all the things!
-	void ReleaseResources();	//TODO: Release Unused Resources
+	void ReleaseResources();
 };
