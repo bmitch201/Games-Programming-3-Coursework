@@ -143,6 +143,7 @@ void Application::GameInit()
 	//Shaders
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "blinn-phong_Vert.glsl", ASSET_PATH + "blinn-phong_Frag.glsl"), "blinn-phong");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "normal_Vert.glsl", ASSET_PATH + "normal_Frag.glsl"), "normal");
 	//Textures
 	Resources::GetInstance()->AddTexture("crate.jpg");
 	Resources::GetInstance()->AddTexture("metal_scratches.jpg");
@@ -201,7 +202,6 @@ void Application::GameInit()
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
-
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -451,12 +451,18 @@ void Application::Loop()
 				
 				if (event.jbutton.button == 4)
 				{
-					INPUT->SetButton(1, true);
+					INPUT->SetButton(4, true);
 				}
 				
 				if (event.jbutton.button == 5)
 				{
 					INPUT->SetButton(5, true);
+				}
+
+				if (event.jbutton.button == 7)
+				{
+					m_appState = AppState::QUITTING;
+					break;
 				}
 				
 				break;
@@ -536,20 +542,21 @@ void Application::Movement()
 {	
 	if (INPUT->GetAxis(0))
 	{
-		m_entities.at(5)->GetTransform()->RotateEulerAxis(-xDir, glm::vec3(0, 1, 0));
+		m_entities.at(5)->GetTransform()->AddPosition(-m_entities.at(5)->GetTransform()->GetRight());
 	}
 	else if (INPUT->GetAxis(1))
 	{
-		m_entities.at(5)->GetTransform()->RotateEulerAxis(xDir, glm::vec3(0, 1, 0));
+		
+		m_entities.at(5)->GetTransform()->AddPosition(m_entities.at(5)->GetTransform()->GetRight());
 	}	
 	
 	if (INPUT->GetAxis(2))
 	{
-		m_entities.at(5)->GetTransform()->RotateEulerAxis(-yDir, m_entities.at(5)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->AddPosition(m_entities.at(5)->GetTransform()->GetForward());
 	}
 	else if (INPUT->GetAxis(3))
 	{
-		m_entities.at(5)->GetTransform()->RotateEulerAxis(yDir, m_entities.at(5)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->AddPosition(-m_entities.at(5)->GetTransform()->GetForward());
 	}	
 	
 	if(INPUT->GetKey(SDLK_w))
@@ -572,20 +579,20 @@ void Application::Movement()
 
 	if (INPUT->GetAxis(4))
 	{
-		m_entities.at(5)->GetTransform()->AddPosition(-m_entities.at(5)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->RotateEulerAxis(-xDir, glm::vec3(0, 1, 0));
 	}
 	else if (INPUT->GetAxis(5))
 	{
-		m_entities.at(5)->GetTransform()->AddPosition(m_entities.at(5)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->RotateEulerAxis(xDir, glm::vec3(0, 1, 0));
 	}
 
 	if (INPUT->GetAxis(6))
 	{
-		m_entities.at(5)->GetTransform()->AddPosition(m_entities.at(5)->GetTransform()->GetForward());
+		m_entities.at(5)->GetTransform()->RotateEulerAxis(yDir, m_entities.at(5)->GetTransform()->GetRight());
 	}
 	else if (INPUT->GetAxis(7))
 	{
-		m_entities.at(5)->GetTransform()->AddPosition(-m_entities.at(5)->GetTransform()->GetForward());
+		m_entities.at(5)->GetTransform()->RotateEulerAxis(-yDir, m_entities.at(5)->GetTransform()->GetRight());
 	}
 
 	if (INPUT->GetKey(SDLK_SPACE))
