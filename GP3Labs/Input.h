@@ -16,6 +16,12 @@ public:
 	void SetKey(SDL_Keycode key, bool state);
 	bool GetKey(SDL_Keycode key);//Checks if the key is currently down
 
+	void SetAxis(float axis, bool state);
+	bool GetAxis(float axis);
+
+	void SetButton(float button, bool state);
+	bool GetButton(float button);
+
 	glm::ivec2 GetMousePos() { return m_state.mousePos; }
 	void MoveMouse(glm::ivec2 delta) { m_state.oldMousePos = m_state.mousePos; m_state.mousePos += delta; }
 

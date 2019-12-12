@@ -49,6 +49,48 @@ bool Input::GetKey(SDL_Keycode key)
 	else return false;
 }
 
+void Input::SetAxis(float axis, bool state)
+{
+	float index = axis;
+
+	if (index < m_state.axes.size())
+	{
+		m_state.axes[index] = state;
+	}
+}
+
+bool Input::GetAxis(float axis)
+{
+	float index = axis;
+
+	if (index < m_state.axes.size())
+	{
+		return m_state.axes[index];
+	}
+	else return false;
+}
+
+void Input::SetButton(float button, bool state)
+{
+	float index = button;
+
+	if (index < m_state.buttons.size())
+	{
+		m_state.buttons[index] = state;
+	}
+}
+
+bool Input::GetButton(float button)
+{
+	float index = button;
+
+	if (index < m_state.buttons.size())
+	{
+		return m_state.buttons[index];
+	}
+	else return false;
+}
+
 bool Input::GetKeyDown(SDL_Keycode key)
 {
 	int index = key;

@@ -18,6 +18,12 @@ private:
 	std::vector<Entity*> m_entities;
 	Camera* m_mainCamera = nullptr;
 
+	std::string f_path = ASSET_PATH + "Arial.ttf";
+
+	const int js_Deadzone = 5000;
+	SDL_Joystick* m_gameController = nullptr;
+	SDL_Haptic* m_gameControllerHaptic = nullptr;
+
 	//private variables
 	static Application* m_application;
 	SDL_Window* m_window = nullptr;
@@ -45,6 +51,10 @@ private:
 	void Quit();
 	void Update(float deltaTime);
 	void Render();	void GameInit();	void Movement();
+
+	//Joystick direction
+	float xDir = 1.f;
+	float yDir = 1.f;
 
 public:
 	//public functions
