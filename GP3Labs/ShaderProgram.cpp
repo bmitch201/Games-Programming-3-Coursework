@@ -40,7 +40,6 @@ void ShaderProgram::Use()
 
 	if (m_programActive == GL_FALSE || m_program != m_programActive)
 	{
-
 		m_programActive = m_program;
 	}
 }

@@ -150,6 +150,8 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("Metal.jpg");
 	Resources::GetInstance()->AddTexture("Rubber.jpg");
 	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
+	Resources::GetInstance()->AddTexture("brickwall.jpg");
+	Resources::GetInstance()->AddTexture("brickwall_normal.jpg");
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
@@ -163,45 +165,45 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, -70.f));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
 	
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, 30.f));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(-50.f, -5.f, -20.f));
 	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("crate.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(50.f, -5.f, -20.f));
 	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 5.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -307,7 +309,7 @@ void Application::Loop()
 	{
 		frames++;
 		time(&c_time);
-		SDL_RenderClear(renderer);
+		//SDL_RenderClear(renderer);
 
 		//poll SDL events	
 		while (SDL_PollEvent(&event))
@@ -326,6 +328,7 @@ void Application::Loop()
 				switch (event.key.keysym.sym)
 				{
 
+				//MOVE THIS INTO THE MOVEMENT FUNCTION
 				case SDLK_UP:
 					for (int i = 6; i < m_entities.size(); i++)
 					{
@@ -364,7 +367,7 @@ void Application::Loop()
 				INPUT->MoveMouse(glm::ivec2(event.motion.xrel,event.motion.yrel));
 				glm::ivec2 movementPos = INPUT->GetMouseDelta();
 				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.x, glm::vec3(0,1,0));
-				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.y, -m_entities.at(5)->GetTransform()->GetRight());
+				m_entities.at(5)->GetTransform()->RotateEulerAxis(movementPos.y, m_entities.at(5)->GetTransform()->GetRight());
 				break;
 			case SDL_JOYAXISMOTION:	
 				if (event.jaxis.which == 0)
@@ -499,7 +502,7 @@ void Application::Loop()
 		prevTicks = currentTicks;
 		Physics::GetInstance()->Update(deltaTime);
 		
-		//Set Uniforms to allow for multiple shaders!
+		//Set Uniforms to allow for multiple shaders
 		Resources::GetInstance()->GetShader("simple")->Use();
 		Resources::GetInstance()->GetShader("simple")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
 		Resources::GetInstance()->GetShader("simple")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
@@ -510,7 +513,7 @@ void Application::Loop()
 		Resources::GetInstance()->GetShader("blinn-phong")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("viewPos", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition());
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec4("lightColor", glm::vec4(1.f, 1.f, 1.f, 0.5f));
-		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));	
+		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));
 
 		Update(deltaTime);
 
@@ -588,11 +591,11 @@ void Application::Movement()
 
 	if (INPUT->GetAxis(6))
 	{
-		m_entities.at(5)->GetTransform()->RotateEulerAxis(yDir, m_entities.at(5)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->RotateEulerAxis(-yDir, m_entities.at(5)->GetTransform()->GetRight());
 	}
 	else if (INPUT->GetAxis(7))
 	{
-		m_entities.at(5)->GetTransform()->RotateEulerAxis(-yDir, m_entities.at(5)->GetTransform()->GetRight());
+		m_entities.at(5)->GetTransform()->RotateEulerAxis(yDir, m_entities.at(5)->GetTransform()->GetRight());
 	}
 
 	if (INPUT->GetKey(SDLK_SPACE))
@@ -615,7 +618,7 @@ void Application::Movement()
 
 	if (INPUT->GetButton(4))
 	{
-		SDL_HapticRumblePlay(m_gameControllerHaptic, 0.5, 500);
+		SDL_HapticRumblePlay(m_gameControllerHaptic, .5f, 500);
 		for (int i = 6; i < m_entities.size(); i++)
 		{
 			m_entities.at(i)->GetComponent<RigidBody>()->ApplyTorque(btVector3(0, -30, 0));
@@ -624,7 +627,7 @@ void Application::Movement()
 	
 	if (INPUT->GetButton(5))
 	{
-		SDL_HapticRumblePlay(m_gameControllerHaptic, 0.5, 500);
+		SDL_HapticRumblePlay(m_gameControllerHaptic, .5f, 500);
 		for (int i = 6; i < m_entities.size(); i++)
 		{
 			m_entities.at(i)->GetComponent<RigidBody>()->ApplyForce(btVector3(0, -20, 0));
@@ -650,6 +653,7 @@ void Application::Quit()
 
 Application::~Application()
 {
+
 }
 
 Application* Application::GetInstance()
@@ -660,8 +664,6 @@ Application* Application::GetInstance()
 	}
 	return m_application;
 }
-
-
 
 void Application::Run()
 {

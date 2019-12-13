@@ -6,7 +6,7 @@ void Model::Load()
 {
 	//importer should release all resources the moment it goes out of scope
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(m_directory, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
+	const aiScene* scene = importer.ReadFile(m_directory, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -73,6 +73,31 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		{
 			vertex.texture = glm::vec2(0.0f, 0.0f);
 		}
+
+		if (mesh->HasTangentsAndBitangents())
+		{
+			vertex.tangent.x = mesh->mTangents[i].x;
+			vertex.tangent.y = mesh->mTangents[i].y;
+			vertex.tangent.z = mesh->mTangents[i].z;
+
+			for (unsigned int i = 0; i < indices.size(); i += 3)
+			{
+				Vertex& vertex0 = vertices[indices[i]];
+				Vertex& vertex1 = vertices[indices[i+1]];
+				Vertex& vertex2 = vertices[indices[i+2]];
+
+				glm::vec3 edge1 = vertex1.pos - vertex0.pos;
+				glm::vec3 edge2 = vertex2.pos - vertex0.pos;
+
+				float deltaU1 = vertex1.texture.x - vertex0.texture.x;
+			}
+		}
+		else
+		{
+			LOG_DEBUG("No Tangents", Log::Warning);
+		}
+
+
 		
 		vertices.push_back(vertex);
 

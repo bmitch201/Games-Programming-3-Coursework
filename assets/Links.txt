@@ -22,3 +22,8 @@ https://ideone.com/OvtMX
 Controller
 https://www.libsdl.org/release/SDL-1.2.15/docs/html/guideinput.html
 http://lazyfoo.net/tutorials/SDL/20_force_feedback/index.php
+
+Normal Mapping
+http://ogldev.atspace.co.uk/www/tutorial26/tutorial26.html
+http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/
+https://learnopengl.com/Advanced-Lighting/Normal-Mapping

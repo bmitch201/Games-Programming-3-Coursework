@@ -1,5 +1,7 @@
 #version 420
 uniform sampler2D thisTexture;
+unifrom smapler2D thisNormal;
+
 uniform vec3 lightDir;
 uniform vec3 viewPos;
 uniform vec4 lightColor;
@@ -14,6 +16,9 @@ float ambientStrength = 0.2f;
 
 void main()
 {
+	vec3 norm = texture(thisNormal, texCoord).rgb;
+	norm = normalize(norm* 2.f -1.f);
+	
 	vec4 ambient = ambientStrength * lightColor;
 
 	float diff = max(dot(normalize(normal), normalize(lightDir)), 0.0);

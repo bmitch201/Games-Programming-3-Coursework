@@ -30,6 +30,9 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<int> indices)
 	//normals
 	SetUpAttrib(3, 3, GL_FLOAT, sizeof(glm::vec3) + sizeof(glm::vec4) + sizeof(glm::vec2));
 
+	//tangent
+	SetUpAttrib(4, 3, GL_FLOAT, sizeof(glm::vec3) + sizeof(glm::vec4) + sizeof(glm::vec2) + sizeof(glm::vec3));
+
 	m_vao_id = m_vao;
 }
 
