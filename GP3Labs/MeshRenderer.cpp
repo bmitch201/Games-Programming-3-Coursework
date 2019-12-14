@@ -31,11 +31,19 @@ void MeshRenderer::OnRender()
 
 	m_program->setMat4("model", m_entity->GetTransform()->GetTransformationMatrix());
 
+	glUniform1i(glGetUniformLocation(m_program->Get(), "thisTexture"), 0);
+	glUniform1i(glGetUniformLocation(m_program->Get(), "thisNormal"), 1);
 	m_texture->Bind();
+	if (m_normal != nullptr)
+	{
+		LOG_DEBUG(std::to_string(m_program->Get()), Log::Trace);
+		glUniform1i(glGetUniformLocation(m_program->Get(), "thisNormal"), 1);
+		m_normal->BindNormal();
+	}
+
 	for (Mesh* mesh : m_model->GetMeshes())
 	{
 		mesh->Bind();
-		//if (m_texture) m_texture->Bind();
-		GL_ATTEMPT(glDrawElements(GL_TRIANGLES, mesh->GetIndiciesCount(), GL_UNSIGNED_INT, 0));
+		(glDrawElements(GL_TRIANGLES, mesh->GetIndiciesCount(), GL_UNSIGNED_INT, 0));
 	}
 }

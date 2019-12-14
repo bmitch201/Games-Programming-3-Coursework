@@ -25,6 +25,7 @@ public:
 	void AddModel(const std::string& name, std::shared_ptr<Model> m) { m_models[name] = m; }
 
 	void AddTexture(const std::string& directory);
+	void AddTexture(const std::string& directory, const std::string& normalDirectory);
 	void AddTexture(const std::string& name, std::shared_ptr<Texture> t) { m_textures[name] = t; };
 	
 	std::shared_ptr<ShaderProgram> GetShader(const std::string& name);

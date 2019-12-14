@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 #include "Application.h"
-#include "Common.h" // Didn't exist, but Log.h was missing for functions LOG_DEBUG / CHECK_GL_ERROR
+#include "Common.h"
 #include "Log.h"
 #include "MeshRenderer.h"
 #include "Quad.h"
@@ -56,7 +56,7 @@ void Application::Init()
 		
 		if (m_gameController == nullptr)
 		{
-			LOG_DEBUG("Game controller not found ", Log::Error);
+			LOG_DEBUG("Game controller not found ", Log::Warning);
 		}
 		else
 		{
@@ -144,14 +144,21 @@ void Application::GameInit()
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_Vert.glsl", ASSET_PATH + "simple_Frag.glsl"), "simple");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "blinn-phong_Vert.glsl", ASSET_PATH + "blinn-phong_Frag.glsl"), "blinn-phong");
 	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "normal_Vert.glsl", ASSET_PATH + "normal_Frag.glsl"), "normal");
+
+	Resources::GetInstance()->GetShader("normal")->Use();
+	glUniform1i(glGetUniformLocation(Resources::GetInstance()->GetShader("normal")->Get(), "thisNormal"), 1);
+
+	Resources::GetInstance()->GetShader("normal")->setInt("thisTexture", 0);
+	Resources::GetInstance()->GetShader("normal")->setInt("thisNormal", 1);
 	//Textures
 	Resources::GetInstance()->AddTexture("crate.jpg");
 	Resources::GetInstance()->AddTexture("metal_scratches.jpg");
 	Resources::GetInstance()->AddTexture("Metal.jpg");
 	Resources::GetInstance()->AddTexture("Rubber.jpg");
 	Resources::GetInstance()->AddTexture("Bone-Texture.jpg");
-	Resources::GetInstance()->AddTexture("brickwall.jpg");
+	Resources::GetInstance()->AddTexture("brickwall.jpg");//, "brickwall_normal.jpg");
 	Resources::GetInstance()->AddTexture("brickwall_normal.jpg");
+	//Resources::GetInstance()->AddTexture();
 
 	Entity* a = new Entity();
 	m_entities.push_back(a);
@@ -165,13 +172,13 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("normal"), Resources::GetInstance()->GetTexture("brickwall.jpg"), Resources::GetInstance()->GetTexture("brickwall_normal.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, -70.f));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 50.f, 1.f));
 	
 	a = new Entity();
 	m_entities.push_back(a);
@@ -185,7 +192,7 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("normal"), Resources::GetInstance()->GetTexture("brickwall.jpg"), Resources::GetInstance()->GetTexture("brickwall_normal.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(-50.f, -5.f, -20.f));
 	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
@@ -196,14 +203,14 @@ void Application::GameInit()
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("normal"), Resources::GetInstance()->GetTexture("brickwall.jpg"), Resources::GetInstance()->GetTexture("brickwall_normal.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(50.f, -5.f, -20.f));
 	a->GetTransform()->SetRotation(glm::quat(90.f, 0, 90.f, 0));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 50.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -502,26 +509,29 @@ void Application::Loop()
 		prevTicks = currentTicks;
 		Physics::GetInstance()->Update(deltaTime);
 		
-		//Set Uniforms to allow for multiple shaders
+		//Set Uniforms to allow for multiple shaders	
 		Resources::GetInstance()->GetShader("simple")->Use();
 		Resources::GetInstance()->GetShader("simple")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
 		Resources::GetInstance()->GetShader("simple")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
 		Resources::GetInstance()->GetShader("simple")->setVec3("objectColor", glm::vec3(1.f, 1.f, 1.f));
-		
+			
 		Resources::GetInstance()->GetShader("blinn-phong")->Use();
 		Resources::GetInstance()->GetShader("blinn-phong")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
 		Resources::GetInstance()->GetShader("blinn-phong")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("viewPos", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition());
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec4("lightColor", glm::vec4(1.f, 1.f, 1.f, 0.5f));
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));
-
+		
 		Resources::GetInstance()->GetShader("normal")->Use();
+
 		Resources::GetInstance()->GetShader("normal")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
 		Resources::GetInstance()->GetShader("normal")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
 		Resources::GetInstance()->GetShader("normal")->setVec3("viewPos", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition());
-		Resources::GetInstance()->GetShader("normal")->setVec4("lightColor", glm::vec4(1.f, 1.f, 1.f, 0.5f));
-		Resources::GetInstance()->GetShader("normal")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));
-		Resources::GetInstance()->GetShader("normal")->setInt("thisNormal", 6);
+		Resources::GetInstance()->GetShader("normal")->setVec4("lightColor", glm::vec4(1.f, 0.f, 0.f, 0.5f));
+		Resources::GetInstance()->GetShader("normal")->setVec3("lightDir", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition() + glm::vec3(0.f, 0.f, 50.f)); //LIGHT POSITIONED BEHIND THE PLAYER CAMERA
+		
+		Resources::GetInstance()->GetTexture("brickwall.jpg")->Bind();
+		Resources::GetInstance()->GetTexture("brickwall_normal.jpg")->BindNormal(); 
 
 		Update(deltaTime);
 

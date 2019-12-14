@@ -9,7 +9,6 @@ uniform mat4 view;
 uniform mat4 projection;
 
 out vec2 texCoord;
-out vec3 normal;
 out vec4 vertexColor;
 out vec3 fragPos;
 out mat3 TBN;
@@ -24,7 +23,6 @@ void main()
 	TBN = transpose(mat3(T, B, N));
 
 	texCoord = aCoord;
-	normal = mat3(transpose(inverse(model))) * aNormal;
 	fragPos = (model * vec4(aPos, 1.0)).xyz;
 	gl_Position = projection * view * vec4(fragPos, 1.0);
 }

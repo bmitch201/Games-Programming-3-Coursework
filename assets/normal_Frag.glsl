@@ -9,16 +9,16 @@ uniform vec4 lightColor;
 out vec4 FragColor;
 
 in vec2 texCoord;
-in vec3 normal;
 in vec3 fragPos;
 in mat3 TBN;
 
-float ambientStrength = 0.2f;
+float ambientStrength = 0.1f;
 
 void main()
 {
 	vec3 tangentfragPos = TBN * fragPos;
 	vec3 tangentviewPos = TBN * viewPos;
+	vec3 tangentlightPos = TBN * lightDir;
 
 	vec3 color = texture(thisTexture, texCoord).rgb;
 
@@ -27,13 +27,14 @@ void main()
 	
 	vec4 ambient = ambientStrength * vec4(color, 1.f);
 
-	float diff = max(dot(normalize(normal), normalize(lightDir)), 0.0);
+	vec3 tangentlightDir = normalize(tangentlightPos - tangentfragPos);
+	float diff = max(dot(norm, tangentlightDir), 0.0);
 	vec4 diffuse = vec4(color, 1.f) * diff;
 
 	vec3 viewDir = normalize(tangentviewPos - tangentfragPos);
-	vec3 halfwayDir = normalize(lightDir + viewDir);
+	vec3 halfwayDir = normalize(tangentlightDir + viewDir);
 	
-	float spec = pow(max(dot(normal, halfwayDir), 0.0), 16.0);
+	float spec = pow(max(dot(norm, halfwayDir), 0.0), 32.0);
 	vec4 specular = lightColor * spec;
 
 	FragColor = (ambient + diffuse + specular);

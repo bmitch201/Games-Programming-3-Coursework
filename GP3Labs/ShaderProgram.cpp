@@ -19,8 +19,8 @@ ShaderProgram::~ShaderProgram()
 }
 void ShaderProgram::BindAttribLoc(GLuint loc, const char* name)
 {
-	//LOG_DEBUG("Bind");
 	glBindAttribLocation(m_program, loc, name);
+	LOG_DEBUG(std::to_string(loc) + ", " + name, Log::Trace);
 	//std::cout << glGetAttachedShaders << std::endl;
 	CHECK_GL_ERROR();
 }
