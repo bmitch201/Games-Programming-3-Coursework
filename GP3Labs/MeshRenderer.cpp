@@ -12,6 +12,14 @@ MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<ShaderP
 	m_texture = texture;
 }
 
+MeshRenderer::MeshRenderer(std::shared_ptr<Model> model, std::shared_ptr<ShaderProgram> program, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> normal)
+{
+	m_model = model;
+	m_program = program;
+	m_texture = texture;
+	m_normal = normal;
+}
+
 void MeshRenderer::OnUpdate(float deltaTime)
 {
 
@@ -27,7 +35,7 @@ void MeshRenderer::OnRender()
 	for (Mesh* mesh : m_model->GetMeshes())
 	{
 		mesh->Bind();
-		if (m_texture) m_texture->Bind();
+		//if (m_texture) m_texture->Bind();
 		GL_ATTEMPT(glDrawElements(GL_TRIANGLES, mesh->GetIndiciesCount(), GL_UNSIGNED_INT, 0));
 	}
 }

@@ -175,13 +175,13 @@ void Application::GameInit()
 	
 	a = new Entity();
 	m_entities.push_back(a);
-	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("simple"), Resources::GetInstance()->GetTexture("brickwall.jpg")));
+	a->AddComponent(new MeshRenderer(Resources::GetInstance()->GetModel("Crate1.obj"), Resources::GetInstance()->GetShader("normal"), Resources::GetInstance()->GetTexture("brickwall.jpg"), Resources::GetInstance()->GetTexture("brickwall_normal.jpg")));
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5.f, 30.f));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 50.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -192,7 +192,7 @@ void Application::GameInit()
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(50.f, 5.f, 1.f)));
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
-	a->GetTransform()->SetScale(glm::vec3(50.f, 10.f, 1.f));
+	a->GetTransform()->SetScale(glm::vec3(50.f, 50.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -514,6 +514,14 @@ void Application::Loop()
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("viewPos", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition());
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec4("lightColor", glm::vec4(1.f, 1.f, 1.f, 0.5f));
 		Resources::GetInstance()->GetShader("blinn-phong")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));
+
+		Resources::GetInstance()->GetShader("normal")->Use();
+		Resources::GetInstance()->GetShader("normal")->setMat4("view", Application::GetInstance()->GetCamera()->GetView());
+		Resources::GetInstance()->GetShader("normal")->setMat4("projection", Application::GetInstance()->GetCamera()->GetProj());
+		Resources::GetInstance()->GetShader("normal")->setVec3("viewPos", Application::GetInstance()->GetCamera()->GetParentTransform()->GetPosition());
+		Resources::GetInstance()->GetShader("normal")->setVec4("lightColor", glm::vec4(1.f, 1.f, 1.f, 0.5f));
+		Resources::GetInstance()->GetShader("normal")->setVec3("lightDir", glm::vec3(-5.f, 6.f, 7.f));
+		Resources::GetInstance()->GetShader("normal")->setInt("thisNormal", 6);
 
 		Update(deltaTime);
 
