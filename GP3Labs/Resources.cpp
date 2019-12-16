@@ -22,7 +22,6 @@ void Resources::AddModel(const std::string& directory)
 	if (m_models.find(directory) == m_models.end())
 	{
 		m_models[directory] = std::make_shared<Model>(ASSET_PATH + directory);
-		LOG_DEBUG("Model Loaded from " + directory, Log::Trace);
 	}
 }
 
@@ -31,7 +30,6 @@ void Resources::AddTexture(const std::string& directory)
 	if (m_textures.find(directory) == m_textures.end())
 	{
 		m_textures[directory] = std::make_shared<Texture>(ASSET_PATH + directory);
-		LOG_DEBUG("Texture Loaded from " + directory, Log::Trace);
 	}
 }
 

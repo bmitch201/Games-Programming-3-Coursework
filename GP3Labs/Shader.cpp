@@ -47,7 +47,6 @@ GLuint Shader::LoadShaderFromFile(const std::string& fileName, SHADER_TYPE type)
 		file.read(&fileContents[0], len);
 		file.close();
 		GLuint program = LoadShaderFromMemory(fileContents.c_str(),	type);
-		LOG_DEBUG(fileContents, Log::Trace);
 		return program;
 	}
 	return 0;
