@@ -12,8 +12,6 @@ in vec2 texCoord;
 in vec3 fragPos;
 in mat3 TBN;
 
-float ambientStrength = 0.1f;
-
 void main()
 {
 	vec3 tangentfragPos = TBN * fragPos;
@@ -25,6 +23,7 @@ void main()
 	vec3 norm = texture(thisNormal, texCoord).rgb;
 	norm = normalize(norm* 2.f -1.f);
 	
+	float ambientStrength = 0.1f;
 	vec4 ambient = ambientStrength * vec4(color, 1.f);
 
 	vec3 tangentlightDir = normalize(tangentlightPos - tangentfragPos);

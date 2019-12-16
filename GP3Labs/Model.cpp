@@ -35,11 +35,12 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 {
 	std::vector<Vertex> vertices;
 	std::vector<int> indices;
+	bool tangents = true;
 
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Vertex vertex;
-		//process vertex positions, normals, colors and textures
+		//process vertex positions, normals, colors, textures and tangents
 
 		vertex.pos.x = mesh->mVertices[i].x;
 		vertex.pos.y = mesh->mVertices[i].y;
@@ -64,7 +65,7 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vertex.color = glm::vec4(1.f);
 		}
 
-		if (mesh->mTextureCoords[0])//does the mesh contatin texture coordinates?
+		if (mesh->mTextureCoords[0])
 		{
 			vertex.texture.x = mesh->mTextureCoords[0][i].x;
 			vertex.texture.y = mesh->mTextureCoords[0][i].y;
@@ -74,21 +75,26 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vertex.texture = glm::vec2(0.0f, 0.0f);
 		}
 
+		//Check if the mesh comes with tangents
 		if (mesh->HasTangentsAndBitangents())
 		{
 			vertex.tangent.x = mesh->mTangents[i].x;
 			vertex.tangent.y = mesh->mTangents[i].y;
 			vertex.tangent.z = mesh->mTangents[i].z;
-
-			//LOG_DEBUG(std::to_string(vertex.tangent.x) + ", " + std::to_string(vertex.tangent.y) + ", " + std::to_string(vertex.tangent.z), Log::Trace);
 		}
 		else
 		{
-			LOG_DEBUG("No Tangents loaded", Log::Warning);	
+			tangents = false;
 		}
 	
 		vertices.push_back(vertex);
 
+	}
+
+	//If no tangents loaded
+	if (!tangents)
+	{
+		LOG_DEBUG("No Tangents loaded for " + m_directory, Log::Warning);
 	}
 
 	//process indices
@@ -100,48 +106,6 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		{
 			indices.push_back(face.mIndices[j]);
 		}
-
-			//LOG_DEBUG(std::to_string(indices.size()), Log::Trace);
-
-			/*for (unsigned int i = 0; i < indices.size(); i += 3)
-			{
-				Vertex& vertex0 = vertices[indices[i]];
-				Vertex& vertex1 = vertices[indices[i + 1]];
-				Vertex& vertex2 = vertices[indices[i + 2]];
-
-				glm::vec3 edge1 = vertex1.pos - vertex0.pos;
-				glm::vec3 edge2 = vertex2.pos - vertex0.pos;
-
-				float deltaU1 = vertex1.texture.x - vertex0.texture.x;
-				float deltaV1 = vertex1.texture.y - vertex0.texture.y;
-				float deltaU2 = vertex2.texture.x - vertex0.texture.x;
-				float deltaV2 = vertex2.texture.y - vertex0.texture.y;
-
-				float f = 1.f / (deltaU1 * deltaV2 - deltaU2 * deltaV1);
-
-				glm::vec3 t, bt;
-
-				bt.x = f * (-deltaU2 * edge1.x - deltaU1 * edge2.x);
-				bt.y = f * (-deltaU2 * edge1.y - deltaU1 * edge2.y);
-				bt.z = f * (-deltaU2 * edge1.x - deltaU1 * edge2.x);
-
-				if (!mesh->HasTangentsAndBitangents())
-				{
-					t.x = f * (deltaV2 * edge1.x - deltaV1 * edge2.x);
-					t.y = f * (deltaV2 * edge1.y - deltaV1 * edge2.y);
-					t.z = f * (deltaV2 * edge1.z - deltaV1 * edge2.z);
-
-					vertex0.tangent += t;
-					vertex1.tangent += t;
-					vertex2.tangent += t;				
-					
-					LOG_DEBUG(std::to_string(t.x) + ", " + std::to_string(t.y) + ", " + std::to_string(t.z), Log::Trace);
-				}
-
-				vertex0.bitangent += bt;
-				vertex1.bitangent += bt;
-				vertex2.bitangent += bt;
-			}*/
 	}
 
 	return new Mesh(vertices, indices);

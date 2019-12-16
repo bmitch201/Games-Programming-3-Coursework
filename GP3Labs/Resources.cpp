@@ -35,16 +35,6 @@ void Resources::AddTexture(const std::string& directory)
 	}
 }
 
-void Resources::AddTexture(const std::string& directory, const std::string& normalDirectory)
-{
-	if (m_textures.find(directory) == m_textures.end())
-	{
-		m_textures[directory] = std::make_shared<Texture>(ASSET_PATH + directory, ASSET_PATH + normalDirectory);
-		LOG_DEBUG("Texture Loaded from " + directory, Log::Trace);
-		LOG_DEBUG("Normal Loaded from " + normalDirectory, Log::Trace);
-	}
-}
-
 std::shared_ptr<ShaderProgram> Resources::GetShader(const std::string& name)
 {
 	return m_shaderPrograms[name];

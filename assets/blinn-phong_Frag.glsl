@@ -10,12 +10,11 @@ in vec2 texCoord;
 in vec3 normal;
 in vec3 fragPos;
 
-float ambientStrength = 0.2f;
-
 void main()
 {
 	vec4 color = texture(thisTexture, texCoord).rgba;
-
+	
+	float ambientStrength = 0.1f;
 	vec4 ambient = ambientStrength * color;
 
 	float diff = max(dot(normalize(normal), normalize(lightDir)), 0.0);

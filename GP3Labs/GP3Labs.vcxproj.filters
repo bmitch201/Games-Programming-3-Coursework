@@ -181,13 +181,13 @@
     <None Include="..\assets\blinn-phong_Vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\assets\blinn-phong_Frag.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\assets\normal_Vert.glsl">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\assets\normal_Frag.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\assets\blinn-phong_Frag.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
